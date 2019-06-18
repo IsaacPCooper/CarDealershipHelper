@@ -1,5 +1,7 @@
 package com.example.jpa.fyp;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,6 +11,28 @@ import java.util.HashMap;
 import java.util.List;
 
 public class DataParser {
+    private HashMap<String,String> getDuration(JSONArray googleDirectionsJson)
+    {
+        HashMap<String,String> googleDirectionsMap = new HashMap<>();
+        String distance ="";
+        String duration = "";
+
+
+        try {
+            // GATHER distance and duration to JSON obeject
+            distance = googleDirectionsJson.getJSONObject(0).getJSONObject("distance").getString("text");
+            duration = googleDirectionsJson.getJSONObject(0).getJSONObject("duration").getString("text");
+
+            googleDirectionsMap.put("duration" , duration);
+            googleDirectionsMap.put("distance", distance);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return googleDirectionsMap;
+    }
 
     private HashMap<String,String> getPlace(JSONObject googlePlaceJson)
     {
@@ -18,6 +42,7 @@ public class DataParser {
         String latitude = "";
         String longitude = "";
         String reference = "";
+        Log.d("getPlace","Entered");
 
         try {
             if (!googlePlaceJson.isNull("name")) {
@@ -37,6 +62,8 @@ public class DataParser {
             googlePlacesMap.put("lat", latitude);
             googlePlacesMap.put("lng",longitude);
             googlePlacesMap.put("reference",reference);
+
+            Log.d("getPlace", "Putting Places");
         }
         catch (JSONException e) {
             e.printStackTrace();
@@ -48,6 +75,7 @@ public class DataParser {
         int count = jsonArray.length();
         List<HashMap<String,String>> placesList = new ArrayList<>();
         HashMap<String,String> placeMap = null;
+        Log.d("Places", "getPlaces");
 
         for (int i=0; i<count; i++)
         {
@@ -73,6 +101,47 @@ public class DataParser {
             e.printStackTrace();
         }
         return getPlaces(jsonArray);
+    }
+    public String[] parseDirections(String jsonData)
+    {
+        JSONArray jsonArray = null;
+        JSONObject jsonObject;
+
+        try {
+            jsonObject = new JSONObject(jsonData);
+            jsonArray = jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONArray("steps");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return getPaths(jsonArray);
+    }
+
+    public String[] getPaths(JSONArray googleStepsJson )
+    {
+        int count = googleStepsJson.length();
+        String[] polylines = new String[count];
+
+        for(int i = 0;i<count;i++)
+        {
+            try {
+                polylines[i] = getPath(googleStepsJson.getJSONObject(i));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return polylines;
+    }
+
+    public String getPath(JSONObject googlePathJson)
+    {
+        String polyline = "";
+        try {
+            polyline = googlePathJson.getJSONObject("polyline").getString("points");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return polyline;
     }
 }
 
