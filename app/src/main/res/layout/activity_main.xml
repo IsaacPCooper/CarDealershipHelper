@@ -38,7 +38,14 @@
             android:fontFamily="monospace"
             android:hint="Enter Your Password"
             android:inputType="textPassword" />
-
+        <EditText
+            android:id="@+id/editTextPasswordRepeat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:fontFamily="monospace"
+            android:hint="Enter Your Password Again"
+            android:inputType="textPassword" />
         <Button
             android:id="@+id/buttonRegister"
             android:layout_width="match_parent"
@@ -46,6 +53,7 @@
             android:layout_margin="15dp"
             android:fontFamily="monospace"
             android:text="Register User" />
+
 
         <TextView
             android:id="@+id/textViewSignin"
@@ -55,6 +63,7 @@
             android:fontFamily="monospace"
             android:text="Already Registered? Sign in here"
             android:textAlignment="center" />
+
 
 
 

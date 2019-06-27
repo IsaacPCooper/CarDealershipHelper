@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button buttonRegister;
     private EditText editTextEmail;
     private EditText editTextPassword;
+    private EditText editTextPasswordRepeat;
     private TextView textViewSignin;
 
     private ProgressDialog progressDialog;
@@ -49,49 +50,57 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         editTextPassword= (EditText) findViewById(R.id.editTextPassword);
-
+        editTextPasswordRepeat= (EditText) findViewById(R.id.editTextPasswordRepeat);
         textViewSignin = (TextView) findViewById(R.id.textViewSignin);
 
         buttonRegister.setOnClickListener(this);
         textViewSignin.setOnClickListener(this);
     }
-    private void registerUser(){
+    private void registerUser() {
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
 
-        if(TextUtils.isEmpty(email)){
+        if (TextUtils.isEmpty(email)) {
             //email is empty!!
-            Toast.makeText(this, "Please Enter your email",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please Enter your email", Toast.LENGTH_SHORT).show();
             //stop the function
             return;
         }
-        if(TextUtils.isEmpty(password)){
+        if (TextUtils.isEmpty(password)) {
             //password is empty!!
-            Toast.makeText(this, "Please Enter your password",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please Enter your password", Toast.LENGTH_SHORT).show();
             //stop the function
             return;
         }
-        //if everything is okay
-        // User will be registered
-        progressDialog.setMessage("Registering User...");
-        progressDialog.show();
+        if (editTextPassword.getText().toString().equals(editTextPasswordRepeat.getText().toString())) {
+            //if everything is okay
+            // User will be registered
+            progressDialog.setMessage("Registering User...");
+            progressDialog.show();
 
-        firebaseAuth.createUserWithEmailAndPassword(email,password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        //Dismisses Dialog Box
-                        progressDialog.dismiss();
-                        if(task.isSuccessful()){
-                            //user is registered, and logged in
-                            finish();
-                            startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                        }else{
-                            Toast.makeText(MainActivity.this, "Registering Failed!",Toast.LENGTH_SHORT).show();
+            firebaseAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            //Dismisses Dialog Box
+                            progressDialog.dismiss();
+                            if (task.isSuccessful()) {
+                                //user is registered, and logged in
+                                finish();
+                                startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                            } else {
+                                Toast.makeText(MainActivity.this, "Registering Failed!", Toast.LENGTH_SHORT).show();
+                            }
+
                         }
-
-                    }
-                });
+                    });
+        }
+        else{
+            //passwords do not match
+            Toast.makeText(this, "The Passwords Do Not Match!", Toast.LENGTH_SHORT).show();
+            //stop the function
+            return;
+        }
     }
     @Override
     public void onClick (View view){
