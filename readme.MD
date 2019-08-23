@@ -1,9 +1,7 @@
 # Car Dealership Location Application
 <img src="https://image.flaticon.com/icons/svg/61/61120.svg"  height="48" width="48"
      alt="Android Logo"/>
-     
- <i>A WORK IN PROGRESS, FYP PROJECT</i>
-
+  
 <b>An Android-based application to assist in locating nearby car-dealerships.</b>
 
 <h2> Features: </h2>
